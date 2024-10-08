@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Asset {
+  id        BigInt @id @default(autoincrement())
+  assetId   BigInt
+  quantity  BigInt
+  date      DateTime
+  price     BigInt
+}
+
+model Expenditure {
+  expenseId  BigInt   @id @default(autoincrement())
+  accountId  BigInt
+  reason     String
+  amount     BigInt
+  date       DateTime
+}
+
+model Income {
+  incomeId   BigInt   @id @default(autoincrement())
+  accountId  BigInt
+  amount     BigInt
+  date       DateTime
+}
+
+model AssetType {
+  assetId   String   @id @unique
+  name      String
+}
+
+
+model Accounts {
+  accountId      Int     @id @default(autoincrement())
+  accountName    String
+  accountNo      String
+  accountIfccode String
+  accountBranch  String
+  accountBalance Float
+}
+
+
+model AssetValue {
+  assetValueId  BigInt   @id @default(autoincrement())
+  assetId       String
+  latestPrice   BigInt
+  date          DateTime
+}
+
+model MutualFundNav {
+  id          BigInt   @id @default(autoincrement())
+  schemeId    String   @unique
+  schemeName  String
+  latestNav   Float
+  date        DateTime 
+}
