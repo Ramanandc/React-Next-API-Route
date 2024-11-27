@@ -1,10 +1,47 @@
+import {
+  ClerkProvider,
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  UserButton,
+} from "@clerk/nextjs";
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
+} from "@headlessui/react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
-
+import Home from "./home/page";
+const user = {
+  name: "Tom Cook",
+  email: "tom@example.com",
+  imageUrl:
+    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+};
+const navigation = [
+  { name: "Dashboard", href: "/", current: true },
+  { name: "Accounts", href: "/accounts", current: false },
+  { name: "Income", href: "/income", current: false },
+  { name: "Expense", href: "/expenses", current: false },
+  { name: "Asserts", href: "/asserttype", current: false },
+];
+const userNavigation = [
+  { name: "Your Profile", href: "/" },
+  { name: "Settings", href: "/income" },
+  { name: "Sign out", href: "/accounts" },
+];
 const inter = Inter({ subsets: ["latin"] });
 
+function classNames(...classes: any) {
+  return classes.filter(Boolean).join(" ");
+}
 export const metadata: Metadata = {
   title: "Budget Planner - 2024",
   description: "A budget planner for 2024",
@@ -16,98 +53,168 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <nav className="bg-white border-gray-200 dark:bg-gray-900">
-          <div className="flex flex-wrap items-center justify-between mx-auto py-4 container">
-            <a
-              href="/"
-              className="flex items-center space-x-3 rtl:space-x-reverse"
-            >
-              <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-                Budget Planner
-              </span>
-            </a>
-            <button
-              data-collapse-toggle="navbar-default"
-              type="button"
-              className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-              aria-controls="navbar-default"
-              aria-expanded="false"
-            >
-              <span className="sr-only">Open main menu</span>
-              <svg
-                className="w-5 h-5"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 17 14"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M1 1h15M1 7h15M1 13h15"
-                />
-              </svg>
-            </button>
-            <div
-              className="hidden w-full md:block md:w-auto"
-              id="navbar-default"
-            >
-              <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-                <li>
-                  <Link
-                    className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                    href="/accounts"
-                  >
-                  Accounts
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                    href="/income"
-                  >
-                    {" "}
-                    Income{" "}
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                    href="/expenses"
-                  >
-                    {" "}
-                    Expenses{" "}
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                    href="/asserttype"
-                  >
-                    {" "}
-                    Asset Type{" "}
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                    href="/assert"
-                  >
-                    {" "}
-                    Asset{" "}
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </nav>
+    <ClerkProvider>
+      <html lang="en">
+        <body className={inter.className}>
+          <div className="min-h-full">
+            <Disclosure as="nav" className="bg-gray-800">
+              <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div className="flex h-16 items-center justify-between">
+                  <div className="flex items-center">
+                    <div className="shrink-0">
+                      <img
+                        alt="Your Company"
+                        src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500"
+                        className="size-8"
+                      />
+                    </div>
+                    <SignedIn>
+                      <div className="hidden md:block">
+                        <div className="ml-10 flex items-baseline space-x-4">
+                          {navigation.map((item) => (
+                            <Link
+                              key={item.name}
+                              href={item.href}
+                              aria-current={item.current ? "page" : undefined}
+                              className={classNames(
+                                item.current
+                                  ? "bg-gray-900 text-white"
+                                  : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                                "rounded-md px-3 py-2 text-sm font-medium"
+                              )}
+                            >
+                              {item.name}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    </SignedIn>
+                  </div>
+                  <div className="hidden md:block">
+                    <div className="ml-4 flex items-center md:ml-6">
+                      <button
+                        type="button"
+                        className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                      >
+                        <span className="absolute -inset-1.5" />
+                        <span className="sr-only">View notifications</span>
+                      </button>
 
-        {children}
-      </body>
-    </html>
+                      <SignedOut>
+                        <SignInButton />
+                      </SignedOut>
+
+                      {/* Profile dropdown */}
+                      <Menu as="div" className="relative ml-3">
+                        <div>
+                          <MenuButton className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                            <span className="absolute -inset-1.5" />
+                            <span className="sr-only">Open user menu</span>
+
+                            <SignedIn>
+                              <UserButton />
+                            </SignedIn>
+                          </MenuButton>
+                        </div>
+                        <MenuItems
+                          transition
+                          className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                        >
+                          {userNavigation.map((item) => (
+                            <MenuItem key={item.name}>
+                              <Link
+                                href={item.href}
+                                className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
+                              >
+                                {item.name}
+                              </Link>
+                            </MenuItem>
+                          ))}
+                        </MenuItems>
+                      </Menu>
+                    </div>
+                  </div>
+                  <div className="-mr-2 flex md:hidden">
+                    {/* Mobile menu button */}
+                    <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                      <span className="absolute -inset-0.5" />
+                      <span className="sr-only">Open main menu</span>
+                    </DisclosureButton>
+                  </div>
+                </div>
+              </div>
+
+              <DisclosurePanel className="md:hidden">
+                <div className="space-y-1 px-2 pb-3 pt-2 sm:px-3">
+                  {navigation.map((item) => (
+                    <DisclosureButton
+                      key={item.name}
+                      as="a"
+                      href={item.href}
+                      aria-current={item.current ? "page" : undefined}
+                      className={classNames(
+                        item.current
+                          ? "bg-gray-900 text-white"
+                          : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                        "block rounded-md px-3 py-2 text-base font-medium"
+                      )}
+                    >
+                      {item.name}
+                    </DisclosureButton>
+                  ))}
+                </div>
+                <div className="border-t border-gray-700 pb-3 pt-4">
+                  <div className="flex items-center px-5">
+                    <div className="shrink-0">
+                      <img
+                        alt=""
+                        src={user.imageUrl}
+                        className="size-10 rounded-full"
+                      />
+                    </div>
+                    <div className="ml-3">
+                      <div className="text-base/5 font-medium text-white">
+                        {user.name}
+                      </div>
+                      <div className="text-sm font-medium text-gray-400">
+                        {user.email}
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      className="relative ml-auto shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                    >
+                      <span className="absolute -inset-1.5" />
+                      <span className="sr-only">View notifications</span>
+                    </button>
+                  </div>
+                  <div className="mt-3 space-y-1 px-2">
+                    {userNavigation.map((item) => (
+                      <DisclosureButton
+                        key={item.name}
+                        as="a"
+                        href={item.href}
+                        className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
+                      >
+                        {item.name}
+                      </DisclosureButton>
+                    ))}
+                  </div>
+                </div>
+              </DisclosurePanel>
+            </Disclosure>
+
+            <main>
+              <div className="mx-auto max-w-7xl px-4 py-0 sm:px-6 lg:px-0">
+                <SignedIn>{children}</SignedIn>
+                <SignedOut>
+                  <Home />
+                </SignedOut>
+              </div>
+            </main>
+          </div>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

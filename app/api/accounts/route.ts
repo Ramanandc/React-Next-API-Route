@@ -14,7 +14,6 @@ export async function GET() {
 
 // POST: Create a new account
 export async function POST(request: Request) {
-  console.log('Request:', request);
   try {
     const data = await request.json();
     console.log('Data:', data);
