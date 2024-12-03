@@ -15,16 +15,9 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Asset {
-  id        BigInt @id @default(autoincrement())
-  assetId   BigInt
-  quantity  BigInt
-  date      DateTime
-  price     BigInt
-}
-
 model Expenditure {
   expenseId  BigInt   @id @default(autoincrement())
+  userId     String
   accountId  BigInt
   reason     String
   amount     BigInt
@@ -33,20 +26,17 @@ model Expenditure {
 
 model Income {
   incomeId   BigInt   @id @default(autoincrement())
+  userId     String
   accountId  BigInt
   amount     BigInt
   date       DateTime
 }
 
-model AssetType {
-  assetId   String   @id @unique
-  name      String
-}
-
-
 model Accounts {
   accountId      Int     @id @default(autoincrement())
+  userId         String
   accountName    String
+  accountHolder  String
   accountNo      String
   accountIfccode String
   accountBranch  String
@@ -54,17 +44,3 @@ model Accounts {
 }
 
 
-model AssetValue {
-  assetValueId  BigInt   @id @default(autoincrement())
-  assetId       String
-  latestPrice   BigInt
-  date          DateTime
-}
-
-model MutualFundNav {
-  id          BigInt   @id @default(autoincrement())
-  schemeId    String   @unique
-  schemeName  String
-  latestNav   Float
-  date        DateTime 
-}

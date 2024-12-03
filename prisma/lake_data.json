@@ -1,0 +1,66 @@
+[
+  {
+    "date": "",
+    "reservoirName": "",
+    "level": "",
+    "capacity": "",
+    "inflow": "",
+    "outflow": ""
+  },
+  {
+    "date": "POONDI",
+    "reservoirName": "140.00",
+    "level": "3231.00",
+    "capacity": "127.70",
+    "inflow": "540.00",
+    "outflow": "16.71"
+  },
+  {
+    "date": "CHOLAVARAM",
+    "reservoirName": "65.50",
+    "level": "1081.00",
+    "capacity": "49.28",
+    "inflow": "122.00",
+    "outflow": "11.29"
+  },
+  {
+    "date": "PUZHAL",
+    "reservoirName": "50.20",
+    "level": "3300.00",
+    "capacity": "45.79",
+    "inflow": "2367.00",
+    "outflow": "71.73"
+  },
+  {
+    "date": "KANNANKOTTAI THERVOY KANDIGAI",
+    "reservoirName": "115.35",
+    "level": "500.00",
+    "capacity": "109.04",
+    "inflow": "302.00",
+    "outflow": "60.40"
+  },
+  {
+    "date": "CHEMBARAMBAKKAM",
+    "reservoirName": "85.40",
+    "level": "3645.00",
+    "capacity": "79.99",
+    "inflow": "2268.00",
+    "outflow": "62.22"
+  },
+  {
+    "date": "VEERANAM",
+    "reservoirName": "47.50",
+    "level": "1465.00",
+    "capacity": "45.70",
+    "inflow": "1027.00",
+    "outflow": "70.10"
+  },
+  {
+    "date": "TOTAL",
+    "reservoirName": "-",
+    "level": "13,222.00",
+    "capacity": "-",
+    "inflow": "6,626.00",
+    "outflow": "50.11"
+  }
+]

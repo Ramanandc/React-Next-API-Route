@@ -1,12 +1,15 @@
 "use client";
 
+import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
+import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
+import { AgGridReact } from "ag-grid-react"; // React Data Grid Component
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function AccountItem({ account }: { account: any }) {
   const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
-  const handleDelete = async () => {
+  const handleDelete = async (accountId : any) => {
     setIsDeleting(true);
     try {
       await fetch("/api/accounts", {
@@ -15,7 +18,7 @@ export default function AccountItem({ account }: { account: any }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          accountId: account.accountId,
+          accountId: accountId,
         }),
       });
       // Optionally, you can refresh the page or update the UI after deletion.
@@ -27,29 +30,54 @@ export default function AccountItem({ account }: { account: any }) {
     }
   };
 
+  const colDefs = [
+    { headerName: "Account ID", field: "accountId" },
+    { headerName: "Account Name", field: "accountName" },
+    { headerName: "Account No", field: "accountNo" },
+    { headerName: "Account IFCCODE", field: "accountIfccode" },
+    { headerName: "Account Branch", field: "accountBranch" },
+    { headerName: "Account Balance", field: "accountBalance" },
+    {
+      headerName: "Action",
+      cellRenderer: function (params: any) {
+        return (
+          <button
+            onClick={() => handleDelete(
+              params.data.accountId
+            )}
+            
+            disabled={isDeleting}
+            className="text-red-600 dark:text-red-400"
+          >
+            Delete 
+          </button>
+        );
+      },
+    },
+  ];
+
   return (
-    <tr
-      key={account.accountId}
-      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+    <div
+      className="ag-theme-quartz"
+      style={{ height: 500 }} // the Data Grid will fill the size of the parent container
     >
-      <th
-        scope="row"
-        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-      >
-        {account.accountName}
-      </th>
-      <td className="px-6 py-4">{account.accountBalance}</td>
-      <td className="px-6 py-4">{account.accountNo}</td>
-      <td className="px-6 py-4">{account.accountBranch}</td>
-      <td className="px-6 py-4">
-        <button
-          onClick={handleDelete}
-          disabled={isDeleting}
-          className="text-red-600 dark:text-red-400"
-        >
-          {isDeleting ? "Deleting..." : "Delete"}
-        </button>
-      </td>
-    </tr>
+      {" "}
+      <AgGridReact
+        gridOptions={{
+          defaultColDef: {
+            flex: 1,
+            minWidth: 150,
+            sortable: true,
+            filter: true,
+            
+          },
+          pagination: true,
+          paginationPageSize: 10,
+        }}
+        rowHeight={60}
+        rowData={account}
+        columnDefs={colDefs}
+      />
+    </div>
   );
 }

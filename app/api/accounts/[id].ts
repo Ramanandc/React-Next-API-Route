@@ -28,7 +28,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 
 export async function GET(req: Request, { params }: { params: { id: string } }) {
   const accountId = parseInt(params.id, 10);
-
+ console.log("accountId", accountId);
   try {
     const account = await prisma.accounts.findUnique({
       where: { accountId },
