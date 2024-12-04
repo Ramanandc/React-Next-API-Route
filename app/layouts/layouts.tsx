@@ -35,8 +35,16 @@ export const BudgetLayout = ({ children }: BudgetLayoutProps) => {
       {/* Header */}
       <header className="bg-white shadow-md">
         <div className="flex items-center justify-between p-4">
-          <div>
-            <img src="logo.png" alt="Budget Planner" className="h-8" />
+          <div className="flex gap-2 items-center">
+          <span className="inline-flex items-center justify-center w-8 h-8 bg-sky-900 text-white text-sm font-bold rounded-full">
+  B
+</span>
+            <h1 className="text-xl font-bold text-sky-900">
+                {/* create a small circle with text B inside */}
+                  
+                
+
+              Budget Tracker</h1>
           </div>
 
           {/* Profile Section */}
