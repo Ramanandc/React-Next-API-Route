@@ -1,4 +1,5 @@
-'use client';
+"use client";
+
 import {
   BarElement,
   CategoryScale,
@@ -9,28 +10,85 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 
 // Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const ExpenseChart: React.FC = () => {
-  /* chart data for entier month date wise */
-  
+  const [transactions, setTransactions] = useState<
+    { date: string; amount: number; transactionType: string }[]
+  >([]);
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const response = await fetch("/api/transactions");
+        if (response.ok) {
+          const data = await response.json();
+          setTransactions(data);
+        } else {
+          console.error("Failed to fetch transactions");
+        }
+      } catch (error) {
+        console.error("Error fetching transactions:", error);
+      }
+    };
+
+    fetchTransactions();
+  }, []);
+
+  // Get all dates of the current month
+  const getCurrentMonthDates = () => {
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+    const dates = [];
+    for (let d = startOfMonth; d <= endOfMonth; d.setDate(d.getDate() + 1)) {
+      dates.push(new Date(d));
+    }
+    return dates;
+  };
+
+  // Process and sort transactions
+  const processedTransactions = (() => {
+    const debitTransactions = transactions.filter(
+      (transaction) => transaction.transactionType.toLowerCase() === "debit"
+    );
+
+    // Map transactions by date for quick lookup
+    const transactionMap = new Map(
+      debitTransactions.map((transaction) => [
+        new Date(transaction.date).toLocaleDateString("en-IN"),
+        transaction.amount,
+      ])
+    );
+
+    // Ensure all dates in the current month are included
+    return getCurrentMonthDates().map((date) => {
+      const dateKey = date.toLocaleDateString("en-IN");
+      return {
+        date: dateKey,
+        amount: transactionMap.get(dateKey) || 0, // Use 0 if no transaction on this date
+      };
+    });
+  })();
+
+  // Generate chart data
   const data = {
-    labels :  new Array(new Date().getDate()).fill(0).map((_, i) => i + 1),
+    labels: processedTransactions.map((t) => t.date),
     datasets: [
       {
         label: "Expenses (₹)",
-        data: new Array(new Date().getDate()).fill(0).map(() => Math.floor(Math.random() * 1000)),
-        backgroundColor: "rgba(235, 99, 37, 0.6)", // Tailwind's sky-600
+        data: processedTransactions.map((t) => t.amount),
+        backgroundColor: "rgba(235, 99, 37, 0.6)", // Bar color
         borderColor: "rgba(235, 99, 37, 1)",
         borderWidth: 1,
       },
     ],
   };
-
 
   const options: ChartOptions<"bar"> = {
     responsive: true,
@@ -40,14 +98,18 @@ const ExpenseChart: React.FC = () => {
       },
       title: {
         display: true,
-        text: "Expenses for This Month",
+        text: "Debit Transactions for This Month",
       },
     },
   };
 
   return (
     <div className="bg-white shadow rounded-lg p-6">
-      <Bar data={data} options={options} />
+      {processedTransactions.length > 0 ? (
+        <Bar data={data} options={options} />
+      ) : (
+        <p>Loading data...</p>
+      )}
     </div>
   );
 };

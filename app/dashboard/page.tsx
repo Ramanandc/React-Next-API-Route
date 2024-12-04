@@ -1,6 +1,8 @@
 import ExpenseChart from "@/components/expenseChart";
 import IncomeChart from "@/components/incomeChart";
 import TotalAmount from "@/components/totalAmount";
+import TotalCredit from "@/components/totalCredit";
+import TotalDebit from "@/components/totalDebit";
 import prisma from "@/lib/prisma";
 import { BudgetLayout } from "../layouts/layouts";
 
@@ -41,21 +43,21 @@ export default async function Page() {
         </div>
         <div className="bg-white shadow rounded-lg p-6">
           <h3 className="text-lg font-semibold text-gray-700">
-            Expenses{" "}
+            Debit{" "}
             {new Date().toLocaleString("default", { month: "numeric" }) +
               "/" +
               new Date().getFullYear()}
           </h3>
-          <p className="mt-2 text-2xl font-bold text-sky-800">25</p>
+         <TotalDebit />
         </div>
         <div className="bg-white shadow rounded-lg p-6">
           <h3 className="text-lg font-semibold text-gray-700">
-            Income{" "}
+            Credit{" "}
             {new Date().toLocaleString("default", { month: "numeric" }) +
               "/" +
               new Date().getFullYear()}
           </h3>
-          <p className="mt-2 text-2xl font-bold text-sky-800">342</p>
+          <TotalCredit />
         </div>
       </div>
       {/* create two column layout */}
