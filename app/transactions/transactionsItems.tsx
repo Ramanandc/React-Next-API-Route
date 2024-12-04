@@ -28,6 +28,7 @@ export default function TransactionItem({ transaction, onTransactionDeleted }: {
       // Optionally, you can refresh the page or update the UI after deletion.
     } catch (error) {
       console.error("Failed to delete account:", error);
+      toast.error("Failed to delete transaction");
     } finally {
       setIsDeleting(false);
       router.refresh();
