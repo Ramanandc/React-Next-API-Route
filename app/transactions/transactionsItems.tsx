@@ -9,7 +9,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function TransactionItem({ transaction }: { transaction: any }) {
-  console.log(transaction);
   const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
   const handleDelete = async () => {
@@ -34,7 +33,8 @@ export default function TransactionItem({ transaction }: { transaction: any }) {
   };
 
   const colDefs = [
-    { headerName: "Transaction Type", field: "transactionType" },
+    { headerName: "Transaction Type", field: "transactionType",
+     },
     { headerName: "Amount", field: "amount" },
     { headerName: "Reason", field: "reason" },
     {
@@ -56,7 +56,7 @@ export default function TransactionItem({ transaction }: { transaction: any }) {
   return (
     <div
       className="ag-theme-quartz"
-      style={{ height: 500 }} // the Data Grid will fill the size of the parent container
+      style={{ height: 750 }} // the Data Grid will fill the size of the parent container
     >
       {" "}
       <AgGridReact

@@ -58,7 +58,7 @@ export default function AccountItem({ account }: { account: any }) {
   return (
     <div
       className="ag-theme-quartz"
-      style={{ height: 500 }} // the Data Grid will fill the size of the parent container
+      style={{ height: 750 }} // the Data Grid will fill the size of the parent container
     >
       {" "}
       <AgGridReact
