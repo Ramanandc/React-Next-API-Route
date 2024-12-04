@@ -7,6 +7,7 @@ import { AgGridReact } from "ag-grid-react"; // React Data Grid Component
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function TransactionItem({ transaction, onTransactionDeleted }: { transaction: any, onTransactionDeleted :any }) {
   const [isDeleting, setIsDeleting] = useState(false);
@@ -30,6 +31,7 @@ export default function TransactionItem({ transaction, onTransactionDeleted }: {
     } finally {
       setIsDeleting(false);
       router.refresh();
+      toast.success("Transaction Deleted Successfully");
       onTransactionDeleted();
     }
   };
