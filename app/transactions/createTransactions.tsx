@@ -3,7 +3,7 @@
 import { useState } from "react";
 import GenericFormModal from "../components/GenericFormModal";
 
-const CreateTransaction = () => {
+const CreateTransaction = ({ onTransactionCreated }: { onTransactionCreated: () => void }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const transactionFields = [
@@ -25,17 +25,14 @@ const CreateTransaction = () => {
       ],
     },
     { label: "Transaction Amount", name: "transactionAmount", type: "number" },
-
     { label: "Reason", name: "reason", type: "text" },
-    {
-      label: "Transaction Date",
-      name: "transactionDate",
-      type: "date",
-      // Use the following format for date fields
-      // type: "date",
-      // format: "
-    }
+    { label: "Transaction Date", name: "transactionDate", type: "date" },
   ];
+
+  const handleSubmitSuccess = () => {
+    onTransactionCreated(); // Notify parent to refresh transactions
+    setIsModalOpen(false); // Close modal after successful submission
+  };
 
   return (
     <div className="p-6">
@@ -46,14 +43,17 @@ const CreateTransaction = () => {
         Create Transaction
       </button>
 
-      <GenericFormModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title="Create Transaction"
-        fields={transactionFields}
-        submitUrl="/api/transactions"
-        method="POST"
-      />
+      {isModalOpen && (
+        <GenericFormModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          title="Create Transaction"
+          fields={transactionFields}
+          submitUrl="/api/transactions"
+          method="POST"
+          onSubmitSuccess={handleSubmitSuccess} // Pass callback for success handling
+        />
+      )}
     </div>
   );
 };

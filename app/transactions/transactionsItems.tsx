@@ -8,7 +8,7 @@ import { AgGridReact } from "ag-grid-react"; // React Data Grid Component
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function TransactionItem({ transaction }: { transaction: any }) {
+export default function TransactionItem({ transaction, onTransactionDeleted }: { transaction: any, onTransactionDeleted :any }) {
   const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
   const handleDelete = async (data :any) => {
@@ -30,6 +30,7 @@ export default function TransactionItem({ transaction }: { transaction: any }) {
     } finally {
       setIsDeleting(false);
       router.refresh();
+      onTransactionDeleted();
     }
   };
 

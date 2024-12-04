@@ -13,7 +13,7 @@ export async function POST(request: any) {
 
                 const data = await request.json();
                 console.log('data', data);
-                const { transactionType, transactionAmount, reason } = data;
+                const { transactionType, transactionAmount, reason, transactionDate } = data;
 
                 const accountId = data.account;
 
@@ -38,6 +38,7 @@ export async function POST(request: any) {
                                         amount,
                                         transactionType,
                                         reason,
+                                        date: new Date(transactionDate)
                                 },
                         });
 

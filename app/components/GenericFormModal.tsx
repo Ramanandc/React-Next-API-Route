@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import Modal from "../components/modal";
 
 interface Field {
@@ -19,6 +20,7 @@ interface GenericFormModalProps {
   method: "POST" | "PUT";
   onClose: () => void;
   isOpen: boolean;
+  onSubmitSuccess?: () => void; // New optional success callback
 }
 
 const GenericFormModal: React.FC<GenericFormModalProps> = ({
@@ -29,6 +31,7 @@ const GenericFormModal: React.FC<GenericFormModalProps> = ({
   method,
   onClose,
   isOpen,
+  onSubmitSuccess, // Callback to notify the parent on success
 }) => {
   const [formData, setFormData] = useState(initialValues);
   const [holders, setHolders] = useState<{ label: string; value: string }[]>([]);
@@ -46,17 +49,19 @@ const GenericFormModal: React.FC<GenericFormModalProps> = ({
           const holdersData = await holdersResponse.json();
           const accountsData = await accountsResponse.json();
 
-          const holderOptions = holdersData.map((holder: { holderId: number; holderName: string }) => ({
-            label: holder.holderName,
-            value: holder.holderId,
-          }));
-          setHolders(holderOptions);
+          setHolders(
+            holdersData.map((holder: { holderId: number; holderName: string }) => ({
+              label: holder.holderName,
+              value: holder.holderId,
+            }))
+          );
 
-          const accountOptions = accountsData.map((account: { accountId: number; accountName: string }) => ({
-            label: account.accountName,
-            value: account.accountId,
-          }));
-          setAccounts(accountOptions);
+          setAccounts(
+            accountsData.map((account: { accountId: number; accountName: string }) => ({
+              label: account.accountName,
+              value: account.accountId,
+            }))
+          );
         } else {
           console.error("Failed to fetch holders or accounts");
         }
@@ -65,20 +70,21 @@ const GenericFormModal: React.FC<GenericFormModalProps> = ({
       }
     };
 
-    fetchHoldersAndAccounts();
-  }, []);
+    if (isOpen) {
+      fetchHoldersAndAccounts();
+    }
+  }, [isOpen]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "accountHolder" || name === "account" ? Number(value) : value, // Parse accountId/accountHolderId as integer
+      [name]: name === "accountHolder" || name === "account" ? Number(value) : value,
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form data:", formData);
     try {
       const response = await fetch(submitUrl, {
         method,
@@ -86,13 +92,17 @@ const GenericFormModal: React.FC<GenericFormModalProps> = ({
         body: JSON.stringify(formData),
       });
       if (response.ok) {
-        router.refresh();
-        onClose();
+        if (onSubmitSuccess) onSubmitSuccess(); // Notify parent on success
+        router.refresh(); // Ensure the page state updates
+        onClose(); // Close the modal
+        toast.success("Form submitted successfully");
       } else {
         console.error("Failed to submit form");
+        toast.error("Failed to submit form");
       }
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error submitting form:", error);
+      toast.error("Failed to submit form");
     }
   };
 

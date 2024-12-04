@@ -5,58 +5,28 @@ import { BudgetLayout } from "../layouts/layouts";
 import CreateTransaction from "./createTransactions";
 import TransactionItem from "./transactionsItems";
 
-// Define the transaction type
-interface Transaction {
-  transactionId: number;
-  accountId: number;
-  userId: string;
-  amount: number;
-  transactionType: "CREDIT" | "DEBIT";
-  reason?: string;
-  date: string;
-}
+const TransactionPage = () => {
+  const [transactions, setTransactions] = useState([]);
 
-async function fetchTransactions(): Promise<Transaction[]> {
-  const response = await fetch("/api/transactions");
-  if (!response.ok) {
-    throw new Error("Failed to fetch transactions");
-  }
-  return response.json();
-}
-
-export default function TransactionPage() {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>([]);
-  const [filterType, setFilterType] = useState("");
-
-  useEffect(() => {
-    const getTransactions = async () => {
-      try {
-        const data = await fetchTransactions();
+  // Fetch transactions from the server
+  const fetchTransactions = async () => {
+    try {
+      const response = await fetch("/api/transactions");
+      if (response.ok) {
+        const data = await response.json();
         setTransactions(data);
-        setFilteredTransactions(data); // Initially, show all transactions
-      } catch (error) {
-        console.error("Error fetching transactions:", error);
+      } else {
+        console.error("Failed to fetch transactions");
       }
-    };
-
-    getTransactions();
-  }, []);
-
-  const handleFilterChange = (filter: string) => {
-    setFilterType(filter);
-    if (filter === "CREDIT") {
-      setFilteredTransactions(
-        transactions.filter((transaction) => transaction.transactionType === "CREDIT")
-      );
-    } else if (filter === "DEBIT") {
-      setFilteredTransactions(
-        transactions.filter((transaction) => transaction.transactionType === "DEBIT")
-      );
-    } else {
-      setFilteredTransactions(transactions); // Show all transactions
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
     }
   };
+
+  // Fetch transactions on load
+  useEffect(() => {
+    fetchTransactions();
+  }, []);
 
   return (
     <BudgetLayout>
@@ -64,28 +34,21 @@ export default function TransactionPage() {
         <header>
           <div className="container mx-auto flex items-center justify-between pb-4">
             <h1 className="text-xl font-bold text-gray-700">Transactions</h1>
-
-            <div className="flex items-center space-x-2">
-              <select
-                id="transaction"
-                value={filterType}
-                onChange={(e) => handleFilterChange(e.target.value)}
-                className="border border-gray-300 rounded-md px-4 py-2 bg-white text-gray-700 focus:ring-sky-500 focus:border-sky-500"
-              >
-                <option value="">All Transactions</option>
-                <option value="CREDIT">CREDIT</option>
-                <option value="DEBIT">DEBIT</option>
-              </select>
-
-              <CreateTransaction />
-            </div>
+            <CreateTransaction onTransactionCreated={fetchTransactions} />
           </div>
         </header>
 
         <div className="container mx-auto relative overflow-x-auto">
-          <TransactionItem transaction={filteredTransactions} />
+          <TransactionItem 
+
+          transaction={transactions}
+          onTransactionDeleted={fetchTransactions}
+          
+          />
         </div>
       </div>
     </BudgetLayout>
   );
-}
+};
+
+export default TransactionPage;

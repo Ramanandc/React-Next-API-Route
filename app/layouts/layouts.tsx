@@ -4,7 +4,8 @@ import { SignOutButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const navigation = [
   { name: "Dashboard", href: "/dashboard" },
   { name: "Accounts", href: "/accounts" },
@@ -29,6 +30,7 @@ export const BudgetLayout = ({ children }: BudgetLayoutProps) => {
   const { user } = useUser();
   console.log(user);
   return (
+    <>
     <div className="flex flex-col h-screen">
       {/* Header */}
       <header className="bg-white shadow-md">
@@ -106,5 +108,7 @@ export const BudgetLayout = ({ children }: BudgetLayoutProps) => {
         <main className="flex-grow bg-gray-50 p-6 text-black">{children}</main>
       </div>
     </div>
+    <ToastContainer />
+    </>
   );
 };
