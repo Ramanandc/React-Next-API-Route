@@ -8,8 +8,7 @@ import { ReactNode } from "react";
 const navigation = [
   { name: "Dashboard", href: "/dashboard" },
   { name: "Accounts", href: "/accounts" },
-  { name: "Income", href: "/income" },
-  { name: "Expense", href: "/expenses" },
+  { name: "Transaction", href: "/transactions" },
 ];
 
 const userNavigation = [

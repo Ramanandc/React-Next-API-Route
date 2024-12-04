@@ -12,6 +12,7 @@ const EditAccount = ({ account }: any) => {
     { label: "IFSC Code", name: "accountIfccode", type: "text" },
     { label: "Account Branch", name: "accountBranch", type: "text" },
     { label: "Account Balance", name: "accountBalance", type: "number" },
+    { label: "Account Holder", name: "accountHolder", type: "select" },
   ];
 
   return (

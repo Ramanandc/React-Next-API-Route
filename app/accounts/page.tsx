@@ -13,10 +13,16 @@ export default async function AccountsPage() {
   return (
     <BudgetLayout>
     <div>
-      <div className="container mx-auto  mb-10 flex items-center justify-between">
-        <h1 className="text-lg  ">Accounts</h1>
-        <CreateAccount />
-      </div>
+    <header>
+        <div className="container mx-auto flex items-center justify-between pb-4">
+          <h1 className="text-xl font-bold text-gray-700">Accounts</h1>
+
+          {/* Dropdown Input for Account Selection */}
+          <div className="flex items-center space-x-2">
+          <CreateAccount />
+          </div>
+        </div>
+      </header>
       <div className="container mx-auto relative overflow-x-auto">
        
           <AccountItem account={accounts} />

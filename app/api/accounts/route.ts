@@ -4,7 +4,6 @@ import { NextResponse } from 'next/server';
 
 // GET: Fetch all accounts
 export async function GET(request : any ) {
-  console.log('GET request', request);
   try {
     const { userId } = getAuth(request);
     if (!userId) {
@@ -32,8 +31,13 @@ export async function POST(request: any) {
     }
 
     const data = await request.json();
+    data.accountHolder = parseInt(data.accountHolder);
+    data.accountBalance = parseFloat(data.accountBalance);
     const newAccount = await prisma.accounts.create({
-      data: { ...data, userId },
+      data: {
+        ...data,
+        userId,
+      },
     });
 
     return NextResponse.json(newAccount, { status: 201 });
@@ -41,6 +45,7 @@ export async function POST(request: any) {
     console.error('Error creating account:', error);
     return NextResponse.json({ error: 'Failed to create account' }, { status: 500 });
   }
+  
 }
 
 // PUT: Update an account

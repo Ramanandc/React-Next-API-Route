@@ -1,16 +1,15 @@
 import ExpenseChart from "@/components/expenseChart";
 import IncomeChart from "@/components/incomeChart";
 import TotalAmount from "@/components/totalAmount";
+import prisma from "@/lib/prisma";
 import { BudgetLayout } from "../layouts/layouts";
 
-export default function Page() {
-  const accountHolders = [
-    { id: "1", name: "Abinaya Ramanand" },
-    { id: "2", name: "Ramanand Chitravelu" },
-    { id: "3", name: "Chitravelu Swaminathan" },
-  ];
+async function getHolders() {
+  return await prisma.holder.findMany();
+}
 
-  
+export default async function Page() {
+  const accountHolders = await getHolders();
 
   return (
     <BudgetLayout>
@@ -24,11 +23,13 @@ export default function Page() {
               id="accountHolder"
               className="border border-gray-300 rounded-md px-4 py-2 bg-white text-gray-700 focus:ring-sky-500 focus:border-sky-500"
             >
+              <option value="">All Accounts</option>
               {accountHolders.map((holder) => (
-                <option key={holder.id} value={holder.id}>
-                  {holder.name}
+                <option key={holder.holderId} value={holder.holderId}>
+                  {holder.holderName}
                 </option>
               ))}
+              
             </select>
           </div>
         </div>

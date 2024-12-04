@@ -69,10 +69,7 @@ export default function AccountItem({ account }: { account: any }) {
             minWidth: 150,
             sortable: true,
             filter: true,
-            
           },
-          pagination: true,
-          paginationPageSize: 10,
         }}
         rowHeight={60}
         rowData={account}

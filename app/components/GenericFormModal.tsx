@@ -1,13 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../components/modal";
 
 interface Field {
   label: string;
   name: string;
-  type: string;
+  type: string; // 'text', 'number', 'select', etc.
+  options?: { label: string; value: string | number }[]; // For select fields
 }
 
 interface GenericFormModalProps {
@@ -30,30 +31,59 @@ const GenericFormModal: React.FC<GenericFormModalProps> = ({
   isOpen,
 }) => {
   const [formData, setFormData] = useState(initialValues);
+  const [holders, setHolders] = useState<{ label: string; value: string }[]>([]);
+  const [accounts, setAccounts] = useState<{ label: string; value: number }[]>([]);
   const router = useRouter();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    const fetchHoldersAndAccounts = async () => {
+      try {
+        const [holdersResponse, accountsResponse] = await Promise.all([
+          fetch("/api/holders"),
+          fetch("/api/accounts"),
+        ]);
+        if (holdersResponse.ok && accountsResponse.ok) {
+          const holdersData = await holdersResponse.json();
+          const accountsData = await accountsResponse.json();
+
+          const holderOptions = holdersData.map((holder: { holderId: number; holderName: string }) => ({
+            label: holder.holderName,
+            value: holder.holderId,
+          }));
+          setHolders(holderOptions);
+
+          const accountOptions = accountsData.map((account: { accountId: number; accountName: string }) => ({
+            label: account.accountName,
+            value: account.accountId,
+          }));
+          setAccounts(accountOptions);
+        } else {
+          console.error("Failed to fetch holders or accounts");
+        }
+      } catch (error) {
+        console.error("Error fetching holders and accounts:", error);
+      }
+    };
+
+    fetchHoldersAndAccounts();
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: name === "accountHolder" || name === "account" ? Number(value) : value, // Parse accountId/accountHolderId as integer
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    const formDataWithNumber = {
-      ...formData,
-      ...(title === "Create Account" && { accountBalance: parseFloat(formData.accountBalance) }) // Only include accountBalance if the title is "Create Account"
-    };
+    console.log("Form data:", formData);
     try {
       const response = await fetch(submitUrl, {
         method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formDataWithNumber),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
       if (response.ok) {
         router.refresh();
@@ -77,20 +107,41 @@ const GenericFormModal: React.FC<GenericFormModalProps> = ({
             >
               {field.label}
             </label>
-            <input
-              type={field.type}
-              id={field.name}
-              name={field.name}
-              value={formData[field.name] || ""}
-              onChange={handleChange}
-              required
-              className="w-full px-3 text-black py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            {field.type === "select" ? (
+              <select
+                id={field.name}
+                name={field.name}
+                value={formData[field.name] || ""}
+                onChange={handleChange}
+                required
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Select {field.label}</option>
+                {(field.name === "accountHolder" ? holders : field.name === "account" ? accounts : field.options)?.map(
+                  (option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  )
+                )}
+              </select>
+            ) : (
+              <input
+                type={field.type}
+                id={field.name}
+                name={field.name}
+                value={formData[field.name] || ""}
+                onChange={handleChange}
+                required
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            )}
           </div>
         ))}
         <div className="flex justify-end space-x-4">
           <button
             onClick={onClose}
+            type="button"
             className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition"
           >
             Close

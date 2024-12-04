@@ -15,32 +15,39 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Expenditure {
-  expenseId  BigInt   @id @default(autoincrement())
-  userId     String
-  accountId  BigInt
-  reason     String
-  amount     BigInt
-  date       DateTime
-}
+model Holder {
+  holderId   Int      @id @default(autoincrement()) // Auto-increment primary key
+  holderName String @unique
 
-model Income {
-  incomeId   BigInt   @id @default(autoincrement())
-  userId     String
-  accountId  BigInt
-  amount     BigInt
-  date       DateTime
+  accounts   Accounts[]
 }
 
 model Accounts {
-  accountId      Int     @id @default(autoincrement())
+  accountId      Int      @id @default(autoincrement()) // Auto-increment primary key
   userId         String
   accountName    String
-  accountHolder  String
+  accountHolder  Int
   accountNo      String
   accountIfccode String
   accountBranch  String
   accountBalance Float
+
+  holder         Holder @relation(fields: [accountHolder], references: [holderId])
+  transactions   Transaction[]
 }
+
+model Transaction {
+  transactionId   Int      @id @default(autoincrement()) // Auto-increment primary key
+  accountId       Int
+  userId          String
+  amount          Float
+  transactionType String // "DEBIT" or "CREDIT"
+  reason          String?
+  date            DateTime @default(now())
+
+  account         Accounts @relation(fields: [accountId], references: [accountId])
+}
+  
+
 
 

@@ -12,13 +12,21 @@ const CreateAccount = () => {
     { label: "IFSC Code", name: "accountIfccode", type: "text" },
     { label: "Account Branch", name: "accountBranch", type: "text" },
     { label: "Account Balance", name: "accountBalance", type: "number" },
+    {
+      label: "Account Holder",
+      name: "accountHolder",
+      type: "select",
+      options: [
+        // This will be replaced dynamically from holders API in GenericFormModal
+      ],
+    },
   ];
 
   return (
     <div className="p-6">
       <button
         onClick={() => setIsModalOpen(true)}
-        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+        className="px-4 py-2 bg-sky-600 text-white rounded-md hover:bg-blue-700"
       >
         Create Account
       </button>
