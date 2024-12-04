@@ -84,8 +84,8 @@ const IncomeChart: React.FC = () => {
       {
         label: "Income (₹)",
         data: weeklyData.map((w) => w.total),
-        backgroundColor: "rgba(37, 99, 235, 0.6)", // Bar color
-        borderColor: "rgba(37, 99, 235, 1)",
+        backgroundColor: "#6ee7b7", // Bar color
+        borderColor: "#065f46",
         borderWidth: 1,
       },
     ],
