@@ -5,6 +5,7 @@ import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied
 import { AgGridReact } from "ag-grid-react"; // React Data Grid Component
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function AccountItem({ account }: { account: any }) {
   const [isDeleting, setIsDeleting] = useState(false);
@@ -27,6 +28,7 @@ export default function AccountItem({ account }: { account: any }) {
     } finally {
       setIsDeleting(false);
       router.refresh();
+      toast.success("Account Deleted Successfully");
     }
   };
 
