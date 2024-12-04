@@ -95,6 +95,7 @@ export async function GET(request: any) {
 }
 
 export async function DELETE(request: any) {
+        console.log('DELETE request', request);
         try {
                 const { userId } = getAuth(request);
                 if (!userId) {
@@ -102,6 +103,7 @@ export async function DELETE(request: any) {
                 }
 
                 const { transactionId } = await request.json();
+                console.log('transactionId', transactionId);
 
                 // Validate input
                 if (!transactionId) {

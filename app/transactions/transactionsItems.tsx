@@ -11,7 +11,8 @@ import { useState } from "react";
 export default function TransactionItem({ transaction }: { transaction: any }) {
   const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
-  const handleDelete = async () => {
+  const handleDelete = async (data :any) => {
+    console.log('transaction', data);
     setIsDeleting(true);
     try {
       await fetch("/api/transactions", {
@@ -20,7 +21,7 @@ export default function TransactionItem({ transaction }: { transaction: any }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          accountId: transaction.transactionId,
+          transactionId: data.transactionId,
         }),
       });
       // Optionally, you can refresh the page or update the UI after deletion.
@@ -42,7 +43,9 @@ export default function TransactionItem({ transaction }: { transaction: any }) {
       cellRenderer: function (params: any) {
         return (
           <button
-            onClick={() => handleDelete()}
+            onClick={() => handleDelete(
+              params.data
+            )}
             disabled={isDeleting}
             className="text-red-600 dark:text-red-400"
           >
