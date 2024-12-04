@@ -7,11 +7,6 @@ const CreateAccount = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const accountFields = [
-    { label: "Account Name", name: "accountName", type: "text" },
-    { label: "Account Number", name: "accountNo", type: "text" },
-    { label: "IFSC Code", name: "accountIfccode", type: "text" },
-    { label: "Account Branch", name: "accountBranch", type: "text" },
-    { label: "Account Balance", name: "accountBalance", type: "number" },
     {
       label: "Account Holder",
       name: "accountHolder",
@@ -20,6 +15,11 @@ const CreateAccount = () => {
         // This will be replaced dynamically from holders API in GenericFormModal
       ],
     },
+    { label: "Account Name", name: "accountName", type: "text" },
+    { label: "Account Number", name: "accountNo", type: "text" },
+    { label: "IFSC Code", name: "accountIfccode", type: "text" },
+    { label: "Account Branch", name: "accountBranch", type: "text" },
+    { label: "Account Balance", name: "accountBalance", type: "number" },
   ];
 
   return (
