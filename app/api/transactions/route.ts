@@ -93,3 +93,73 @@ export async function GET(request: any) {
                 return NextResponse.json({ error: 'Failed to fetch transactions' }, { status: 500 });
         }
 }
+
+export async function DELETE(request: any) {
+        try {
+                const { userId } = getAuth(request);
+                console.log('userId', userId);
+                if (!userId) {
+                        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+                }
+
+                const { transactionId } = await request.json();
+
+                // Validate input
+                if (!transactionId) {
+                        return NextResponse.json({ error: 'Transaction ID is required' }, { status: 400 });
+                }
+
+                // Start transaction
+                const result = await prisma.$transaction(async (prisma) => {
+                        // Fetch the transaction details
+                        const transaction = await prisma.transaction.findUnique({
+                                where: { transactionId },
+                        });
+
+                        if (!transaction) {
+                                throw new Error('Transaction not found');
+                        }
+
+                        if (transaction.userId !== userId) {
+                                throw new Error('Unauthorized: Cannot delete this transaction');
+                        }
+
+                        // Fetch the associated account
+                        const account = await prisma.accounts.findUnique({
+                                where: { accountId: transaction.accountId },
+                        });
+
+                        if (!account) {
+                                throw new Error('Account not found');
+                        }
+
+                        // Calculate new balance
+                        const adjustedBalance =
+                                transaction.transactionType === 'CREDIT'
+                                        ? account.accountBalance - transaction.amount
+                                        : account.accountBalance + transaction.amount;
+
+                        if (adjustedBalance < 0) {
+                                throw new Error('Cannot delete transaction due to insufficient account balance');
+                        }
+
+                        // Update account balance
+                        await prisma.accounts.update({
+                                where: { accountId: transaction.accountId },
+                                data: { accountBalance: adjustedBalance },
+                        });
+
+                        // Delete the transaction
+                        await prisma.transaction.delete({
+                                where: { transactionId },
+                        });
+
+                        return { message: 'Transaction deleted successfully' };
+                });
+
+                return NextResponse.json(result, { status: 200 });
+        } catch (error: any) {
+                console.error('Error deleting transaction:', error);
+                return NextResponse.json({ error: error.message || 'Failed to delete transaction' }, { status: 500 });
+        }
+}
