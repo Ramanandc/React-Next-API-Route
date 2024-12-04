@@ -7,14 +7,6 @@ const CreateTransaction = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const transactionFields = [
-    { label: "Transaction Amount", name: "transactionAmount", type: "number" },
-    { label: "Transaction Type", name: "transactionType", type: "select", options: [
-        { label: "Credit", value: "CREDIT" },
-        { label: "Debit", value: "DEBIT" }
-      ]
-    },
-    { label: "Reason", name: "reason", type: "text" },
-
     {
       label: "Account",
       name: "account",
@@ -23,6 +15,16 @@ const CreateTransaction = () => {
         // Populate dynamically from accounts API in GenericFormModal
       ]
     },
+    { label: "Transaction Type", name: "transactionType", type: "select", options: [
+      { label: "Credit", value: "CREDIT" },
+      { label: "Debit", value: "DEBIT" }
+    ]
+  },
+    { label: "Transaction Amount", name: "transactionAmount", type: "number" },
+    
+    { label: "Reason", name: "reason", type: "text" },
+
+    
   ];
 
   return (
