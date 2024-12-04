@@ -83,7 +83,7 @@ const ExpenseChart: React.FC = () => {
       {
         label: "Expenses (₹)",
         data: processedTransactions.map((t) => t.amount),
-        backgroundColor: "rgba(235, 99, 37, 0.6)", // Bar color
+        backgroundColor: "#fca5a5", // Bar color
         borderColor: "rgba(235, 99, 37, 1)",
         borderWidth: 1,
       },
