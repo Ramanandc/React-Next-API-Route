@@ -26,7 +26,7 @@ const CreateAccount = () => {
     <div className="p-6">
       <button
         onClick={() => setIsModalOpen(true)}
-        className="px-4 py-2 bg-sky-600 text-white rounded-md hover:bg-blue-700"
+        className="px-4 py-2 bg-sky-600 text-white rounded-md hover:bg-sky-800"
       >
         Create Account
       </button>
