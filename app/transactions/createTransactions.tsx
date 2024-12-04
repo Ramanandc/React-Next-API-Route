@@ -13,18 +13,20 @@ const CreateTransaction = () => {
       type: "select",
       options: [
         // Populate dynamically from accounts API in GenericFormModal
-      ]
+      ],
     },
-    { label: "Transaction Type", name: "transactionType", type: "select", options: [
-      { label: "Credit", value: "CREDIT" },
-      { label: "Debit", value: "DEBIT" }
-    ]
-  },
+    {
+      label: "Transaction Type",
+      name: "transactionType",
+      type: "select",
+      options: [
+        { label: "Credit", value: "CREDIT" },
+        { label: "Debit", value: "DEBIT" },
+      ],
+    },
     { label: "Transaction Amount", name: "transactionAmount", type: "number" },
-    
-    { label: "Reason", name: "reason", type: "text" },
 
-    
+    { label: "Reason", name: "reason", type: "text" },
   ];
 
   return (

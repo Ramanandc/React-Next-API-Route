@@ -1,13 +1,14 @@
 import prisma from "@/lib/prisma";
 import { BudgetLayout } from "../layouts/layouts";
 import CreateTransaction from "./createTransactions";
+import TransactionItem from "./transactionsItems";
 
-async function getAccounts() {
-  return await prisma.accounts.findMany();
+async function getTransaction() {
+  return await prisma.transaction.findMany();
 }
 
-export default async function AccountsPage() {
-  const accounts = await getAccounts();
+export default async function TransactionPage() {
+  const transaction = await getTransaction();
 
   return (
     <BudgetLayout>
@@ -24,7 +25,7 @@ export default async function AccountsPage() {
       </header>
     
       <div className="container mx-auto relative overflow-x-auto">
-        List of transactions
+        <TransactionItem transaction={transaction} />
       </div>
     </div>
     </BudgetLayout>

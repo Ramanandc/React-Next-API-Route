@@ -3,83 +3,93 @@ import { getAuth } from '@clerk/nextjs/server'; // Update with your auth provide
 import { NextResponse } from 'next/server';
 
 export async function POST(request: any) {
-  try {
-    const { userId } = getAuth(request);
-    if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+        console.log('POST request', request);
+        try {
+                const { userId } = getAuth(request);
+                console.log('userId', userId);
+                if (!userId) {
+                        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+                }
 
-    const data = await request.json();
-    const { accountId, transactionType, transactionAmount, reason } = data;
+                const data = await request.json();
+                console.log('data', data);
+                const { transactionType, transactionAmount, reason } = data;
 
-    // Validate input
-    if (!accountId || !transactionType || !transactionAmount) {
-      return NextResponse.json({ error: 'Invalid data' }, { status: 400 });
-    }
+                const accountId = data.account;
 
-    const amount = parseFloat(transactionAmount);
-    if (isNaN(amount) || amount <= 0) {
-      return NextResponse.json({ error: 'Invalid transaction amount' }, { status: 400 });
-    }
+                // Validate input
+                if (!accountId || !transactionType || !transactionAmount) {
+                        return NextResponse.json({ error: 'Invalid data' }, { status: 400 });
+                }
 
-    // Start transaction
-    const result = await prisma.$transaction(async (prisma) => {
-      // Create the transaction
-      const newTransaction = await prisma.transaction.create({
-        data: {
-          accountId,
-          userId,
-          amount,
-          transactionType,
-          reason,
-        },
-      });
+                const amount = parseFloat(transactionAmount);
 
-      // Adjust account balance
-      const account = await prisma.accounts.findUnique({ where: { accountId } });
-      if (!account) {
-        throw new Error('Account not found');
-      }
+                if (isNaN(amount) || amount <= 0) {
+                        return NextResponse.json({ error: 'Invalid transaction amount' }, { status: 400 });
+                }
 
-      const newBalance =
-        transactionType === 'CREDIT'
-          ? account.accountBalance + amount
-          : account.accountBalance - amount;
+                // Start transaction
+                const result = await prisma.$transaction(async (prisma) => {
+                        // Create the transaction
+                        const newTransaction = await prisma.transaction.create({
+                                data: {
+                                        accountId,
+                                        userId,
+                                        amount,
+                                        transactionType,
+                                        reason,
+                                },
+                        });
 
-      if (newBalance < 0) {
-        throw new Error('Insufficient balance for this transaction');
-      }
+                        // Adjust account balance
+                        const account = await prisma.accounts.findUnique({
+                                where: {
+                                        accountId
+                                }
+                        });
+                        if (!account) {
+                                throw new Error('Account not found');
+                        }
 
-      await prisma.accounts.update({
-        where: { accountId },
-        data: { accountBalance: newBalance },
-      });
+                        const newBalance =
+                                transactionType === 'CREDIT'
+                                        ? account.accountBalance + amount
+                                        : account.accountBalance - amount;
 
-      return newTransaction;
-    });
+                        if (newBalance < 0) {
+                                throw new Error('Insufficient balance for this transaction');
+                        }
 
-    return NextResponse.json(result, { status: 201 });
-  } catch (error: any) {
-    console.error('Error creating transaction:', error);
-    return NextResponse.json({ error: error.message || 'Failed to create transaction' }, { status: 500 });
-  }
+                        await prisma.accounts.update({
+                                where: { accountId },
+                                data: { accountBalance: newBalance },
+                        });
+
+                        return newTransaction;
+                });
+
+                return NextResponse.json(result, { status: 201 });
+        } catch (error: any) {
+                console.error('Error creating transaction:', error);
+                return NextResponse.json({ error: error.message || 'Failed to create transaction' }, { status: 500 });
+        }
 }
 
 export async function GET(request: any) {
-  try {
-    const { userId } = getAuth(request);
-    if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+        try {
+                const { userId } = getAuth(request);
+                if (!userId) {
+                        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+                }
 
-    const transactions = await prisma.transaction.findMany({
-      where: { userId },
-      include: { account: true },
-    });
+                const transactions = await prisma.transaction.findMany({
+                        where: { userId },
+                        include: { account: true },
+                });
 
-    return NextResponse.json(transactions, { status: 200 });
-  } catch (error) {
-    console.error('Error fetching transactions:', error);
-    return NextResponse.json({ error: 'Failed to fetch transactions' }, { status: 500 });
-  }
+                return NextResponse.json(transactions, { status: 200 });
+        } catch (error) {
+                console.error('Error fetching transactions:', error);
+                return NextResponse.json({ error: 'Failed to fetch transactions' }, { status: 500 });
+        }
 }
