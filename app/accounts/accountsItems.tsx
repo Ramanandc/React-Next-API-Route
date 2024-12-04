@@ -31,7 +31,6 @@ export default function AccountItem({ account }: { account: any }) {
   };
 
   const colDefs = [
-    { headerName: "Account ID", field: "accountId" },
     { headerName: "Account Name", field: "accountName" },
     { headerName: "Account No", field: "accountNo" },
     { headerName: "Account IFCCODE", field: "accountIfccode" },

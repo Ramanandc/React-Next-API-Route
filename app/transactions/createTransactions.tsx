@@ -27,6 +27,14 @@ const CreateTransaction = () => {
     { label: "Transaction Amount", name: "transactionAmount", type: "number" },
 
     { label: "Reason", name: "reason", type: "text" },
+    {
+      label: "Transaction Date",
+      name: "transactionDate",
+      type: "date",
+      // Use the following format for date fields
+      // type: "date",
+      // format: "
+    }
   ];
 
   return (

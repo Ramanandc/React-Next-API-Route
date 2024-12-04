@@ -43,7 +43,7 @@ model Transaction {
   amount          Float
   transactionType String // "DEBIT" or "CREDIT"
   reason          String?
-  date            DateTime @default(now())
+  date            DateTime 
 
   account         Accounts @relation(fields: [accountId], references: [accountId])
 }

@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function TransactionItem({ transaction }: { transaction: any }) {
+  console.log(transaction);
   const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
   const handleDelete = async () => {
@@ -33,9 +34,8 @@ export default function TransactionItem({ transaction }: { transaction: any }) {
   };
 
   const colDefs = [
-    { headerName: "Transaction ID", field: "transactionId" },
-    { headerName: "Amount", field: "amount" },
     { headerName: "Transaction Type", field: "transactionType" },
+    { headerName: "Amount", field: "amount" },
     { headerName: "Reason", field: "reason" },
     {
       headerName: "Action",
