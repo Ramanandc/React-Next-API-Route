@@ -25,6 +25,7 @@ export default function AccountItem({ account }: { account: any }) {
       // Optionally, you can refresh the page or update the UI after deletion.
     } catch (error) {
       console.error("Failed to delete account:", error);
+      toast.error("Failed to delete account");
     } finally {
       setIsDeleting(false);
       router.refresh();
