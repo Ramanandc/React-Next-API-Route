@@ -138,7 +138,7 @@ const GenericFormModal: React.FC<GenericFormModalProps> = ({
             )}
           </div>
         ))}
-        <div className="flex justify-end space-x-4">
+        <div className="flex justify-between space-x-4">
           <button
             onClick={onClose}
             type="button"
@@ -148,7 +148,7 @@ const GenericFormModal: React.FC<GenericFormModalProps> = ({
           </button>
           <button
             type="submit"
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+            className="bg-sky-600 text-white px-4 py-2 rounded-lg hover:bg-sky-700 transition"
           >
             Submit
           </button>
