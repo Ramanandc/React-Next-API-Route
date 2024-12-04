@@ -97,7 +97,6 @@ export async function GET(request: any) {
 export async function DELETE(request: any) {
         try {
                 const { userId } = getAuth(request);
-                console.log('userId', userId);
                 if (!userId) {
                         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
                 }
@@ -130,17 +129,20 @@ export async function DELETE(request: any) {
                         });
 
                         if (!account) {
-                                throw new Error('Account not found');
+                                throw new Error('Associated account not found');
                         }
 
-                        // Calculate new balance
+                        // Calculate the adjusted balance
                         const adjustedBalance =
                                 transaction.transactionType === 'CREDIT'
                                         ? account.accountBalance - transaction.amount
                                         : account.accountBalance + transaction.amount;
 
+                        // Ensure the adjusted balance is not negative
                         if (adjustedBalance < 0) {
-                                throw new Error('Cannot delete transaction due to insufficient account balance');
+                                throw new Error(
+                                        'Cannot delete transaction because it would result in a negative account balance'
+                                );
                         }
 
                         // Update account balance
@@ -160,6 +162,15 @@ export async function DELETE(request: any) {
                 return NextResponse.json(result, { status: 200 });
         } catch (error: any) {
                 console.error('Error deleting transaction:', error);
-                return NextResponse.json({ error: error.message || 'Failed to delete transaction' }, { status: 500 });
+
+                const errorMessage =
+                        error.message === 'Transaction not found' ||
+                                error.message === 'Unauthorized: Cannot delete this transaction' ||
+                                error.message === 'Associated account not found'
+                                ? error.message
+                                : 'Failed to delete transaction';
+
+                return NextResponse.json({ error: errorMessage }, { status: 500 });
         }
 }
+
