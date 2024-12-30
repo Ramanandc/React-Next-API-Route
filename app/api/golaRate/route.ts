@@ -5,7 +5,7 @@ import axios from "axios";
 export async function GET(res: any) {
         try {
                 if (!process.env.GOLD_API_URL) {
-                    throw new Error('GOLD_API_URL is not defined');
+                        throw new Error('GOLD_API_URL is not defined');
                 }
                 const response = await axios.get(process.env.GOLD_API_URL, {
                         headers: {
@@ -23,7 +23,7 @@ export async function GET(res: any) {
                         },
                 });
         }
-        catch (error) {
+        catch (error: any) {
                 console.error('Error fetching gold rate:', error.message);
                 res.status(500).json({
                         success: false,
