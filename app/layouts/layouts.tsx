@@ -5,12 +5,15 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 import { FaGripHorizontal, FaPiggyBank, FaUser } from "react-icons/fa";
+import { GiGoldBar } from "react-icons/gi";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: <FaGripHorizontal /> },
   { name: "Accounts", href: "/accounts", icon: <FaPiggyBank /> },
   { name: "Transaction", href: "/transactions", icon: <FaUser /> },
+  { name: "Gold", href: "/gold", icon: <GiGoldBar /> },
 ];
 
 const userNavigation = [
