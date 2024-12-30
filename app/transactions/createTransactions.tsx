@@ -38,7 +38,7 @@ const CreateTransaction = ({ onTransactionCreated }: { onTransactionCreated: () 
     <div className="p-6">
       <button
         onClick={() => setIsModalOpen(true)}
-        className="px-4 py-2 bg-sky-600 text-white rounded-md hover:bg-sky-700"
+        className="px-4 py-1 bg-sky-600 text-white rounded-md hover:bg-sky-700"
       >
         Create Transaction
       </button>
