@@ -47,7 +47,17 @@ model Transaction {
 
   account         Accounts @relation(fields: [accountId], references: [accountId])
 }
-  
+
+model GoldTransaction {
+  transactionId   Int      @id @default(autoincrement()) // Auto-increment primary key
+  userId          String   // User performing the transaction
+  transactionType String   // "BUY" or "SELL"
+  weight          Float    // Weight of gold in grams
+  ratePerGram     Float    // Rate of gold per gram at the time of transaction
+  totalAmount     Float    // Calculated total (weight * ratePerGram)
+  date            DateTime // Date of the transaction
+  reason          String?  // Optional reason or description
+}
 
 
 
