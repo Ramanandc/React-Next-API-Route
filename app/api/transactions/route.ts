@@ -78,15 +78,9 @@ export async function POST(request: any) {
 
 export async function GET(request: any) {
         try {
-                const { userId } = getAuth(request);
-                if (!userId) {
-                        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-                }
+             
 
-                const transactions = await prisma.transaction.findMany({
-                        where: { userId },
-                        include: { account: true },
-                });
+                const transactions = await prisma.transaction.findMany();
 
                 return NextResponse.json(transactions, { status: 200 });
         } catch (error) {
