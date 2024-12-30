@@ -3,18 +3,9 @@ import { getAuth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 
 // GET: Fetch all accounts
-export async function GET(request : any ) {
+export async function GET(request: any) {
   try {
-    const { userId } = getAuth(request);
-    if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-    const accounts = await prisma.accounts.findMany(
-      {
-        where: { userId },
-        orderBy: { accountName: 'asc' },
-      }
-    );
+    const accounts = await prisma.accounts.findMany();
     return NextResponse.json(accounts, { status: 200 });
   } catch (error) {
     console.error('Error fetching accounts:', error);
@@ -45,15 +36,15 @@ export async function POST(request: any) {
     console.error('Error creating account:', error);
     return NextResponse.json({ error: 'Failed to create account' }, { status: 500 });
   }
-  
+
 }
 
 // PUT: Update an account
 export async function PUT(request: any) {
   try {
-    
+
     const data = await request.json();
-    
+
     if (!data.accountId) {
       return NextResponse.json({ error: 'Account ID is required' }, { status: 400 });
     }
