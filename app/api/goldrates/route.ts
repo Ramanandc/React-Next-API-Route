@@ -1,8 +1,7 @@
 import axios from "axios";
+import { NextResponse } from 'next/server';
 
-
-
-export async function GET(res: any) {
+export async function GET() {
         try {
                 if (!process.env.GOLD_API_URL) {
                         throw new Error('GOLD_API_URL is not defined');
@@ -14,7 +13,8 @@ export async function GET(res: any) {
                         },
                 });
                 const goldRate = response.data;
-                res.status(200).json({
+                console.log('goldRate:', goldRate);
+                return NextResponse.json({
                         success: true,
                         data: {
                                 ratePerGram: goldRate.price / 31.1035,
@@ -22,12 +22,11 @@ export async function GET(res: any) {
                                 date: goldRate.timestamp,
                         },
                 });
-        }
-        catch (error: any) {
+        } catch (error: any) {
                 console.error('Error fetching gold rate:', error.message);
-                res.status(500).json({
+                return NextResponse.json({
                         success: false,
                         message: 'Failed to fetch the latest gold rate.',
-                });
+                }, { status: 500 });
         }
 }
